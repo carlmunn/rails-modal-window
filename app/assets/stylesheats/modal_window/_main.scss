@@ -1,0 +1,121 @@
+$animation-time: 1000ms;
+$max-fit: 90%;
+
+@keyframes background-elements {
+ 50% { filter: blur(0px) grayscale(1); }
+ 100% { filter: blur(5px) grayscale(0.6); }
+}
+
+@keyframes background-opacity {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes forground-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@mixin stretched($position: absolute) {
+  position: $position;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+// Body, JS will need to do this
+body.modal-visible-animated {
+
+  overflow: hidden;
+  
+  .modal-main {
+    display: flex;
+  }
+
+  &.modal-debug {
+    .modal-centered {
+      
+      border: 1px solid red;
+
+      > .modal-item {
+        border: 1px dotted blue;
+      }
+    }
+  }
+}
+
+.modal-main {
+
+  @include stretched(fixed);
+  
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  .modal-centered {
+
+    display: flex;
+    position: relative;
+    z-index: 100;
+    max-width: $max-fit;
+    max-height: $max-fit;
+
+    // Scrollable content
+    > .modal-item {
+
+      position: relative;
+      overflow-y: auto;
+
+      // Unless this is the main background Shadows
+      // won't look any good
+      //-webkit-box-shadow: 0 0 5px 1px #000000;
+      //box-shadow: 0 0 5px 1px #000000;
+
+      &:empty:before {
+        content: "No Content"
+      }
+    }
+  }
+
+  // Background
+  > .modal-background {
+
+    @include stretched;
+
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0.75) 75%,rgba(0,0,0,0.9) 100%);
+  }
+}
+
+// Animations
+body.modal-visible-animated {
+  
+  > *:not(.modal-main) {
+    animation: background-elements $animation-time forwards;
+  }
+
+  .modal-main {
+
+    > .modal-centered, > .modal-background {
+      opacity: 1;
+    }
+
+    > .modal-centered {
+      animation: forground-scale-in $animation-time forwards;
+    }
+
+    > .modal-background {
+      animation: background-opacity $animation-time * 2 forwards;
+    }
+  }
+}
