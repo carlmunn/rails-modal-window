@@ -1,4 +1,4 @@
-$animation-time: 1000ms;
+$animation-time: 400ms;
 $max-fit: 90%;
 
 @keyframes background-elements {
@@ -14,11 +14,11 @@ $max-fit: 90%;
 @keyframes forground-scale-in {
   0% {
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(0.3);
   }
-  50% {
+  30% {
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(0.3);
   }
   100% {
     opacity: 1;
@@ -35,24 +35,8 @@ $max-fit: 90%;
 }
 
 // Body, JS will need to do this
-body.modal-visible-animated {
-
+body.modal-visible-animated-in {
   overflow: hidden;
-  
-  .modal-main {
-    display: flex;
-  }
-
-  &.modal-debug {
-    .modal-centered {
-      
-      border: 1px solid red;
-
-      > .modal-item {
-        border: 1px dotted blue;
-      }
-    }
-  }
 }
 
 .modal-main {
@@ -63,28 +47,30 @@ body.modal-visible-animated {
   justify-content: center;
   align-items: center;
 
-  .modal-centered {
+  .modal-full-window {
 
+    @include stretched;
+
+    overflow-y: auto;
     display: flex;
-    position: relative;
-    z-index: 100;
-    max-width: $max-fit;
-    max-height: $max-fit;
+    align-items: center;
+    justify-content: center;
 
     // Scrollable content
     > .modal-item {
 
       position: relative;
-      overflow-y: auto;
-
-      // Unless this is the main background Shadows
-      // won't look any good
-      //-webkit-box-shadow: 0 0 5px 1px #000000;
-      //box-shadow: 0 0 5px 1px #000000;
-
+      z-index: 100;
+      max-height: 100%;
+      
       &:empty:before {
         content: "No Content"
       }
+    }
+
+    // Optional
+    .modal-shadow {
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.75);
     }
   }
 
@@ -97,20 +83,28 @@ body.modal-visible-animated {
   }
 }
 
+body.modal-visible {
+
+  &.modal-safari-fix {
+    top: -10px;
+    position: fixed;
+  }
+
+  .modal-main {
+    display: flex;
+    transition: opacity $animation-time;
+  }
+}
+
 // Animations
-body.modal-visible-animated {
-  
+body.modal-visible-animated-in {
+
   > *:not(.modal-main) {
     animation: background-elements $animation-time forwards;
   }
 
   .modal-main {
-
-    > .modal-centered, > .modal-background {
-      opacity: 1;
-    }
-
-    > .modal-centered {
+    > .modal-full-window > .modal-item {
       animation: forground-scale-in $animation-time forwards;
     }
 
@@ -118,4 +112,9 @@ body.modal-visible-animated {
       animation: background-opacity $animation-time * 2 forwards;
     }
   }
+}
+
+// Animations
+body.modal-visible-animated-out .modal-main {
+  opacity: 0;
 }

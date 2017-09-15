@@ -1,22 +1,58 @@
 const ModalWindow = function(opts){
 
-  this.opts = opts
+  // opts.content
+  // opts.id
+
+  this.opts = opts;
+
+  const animateForward = 'modal-visible-animated-in';  
+  const obj            = this;
 
   const _log = function(msg) {
     if(console) console.log('[L][ModalWindow]', msg);
-  } 
-  // opts.content
-  // opts.id
+  }
+
+  const isOpen = function(){
+    return $('body').hasClass(animateForward);
+  }
+
+  const delayedClassRemove = function(){
+    setTimeout(function(){
+      $('body')
+        .removeClass('modal-visible')
+        .removeClass('modal-visible-animated-out');
+    }, 300);
+  }
+
+  // Stops the background from scrolling
+  const safariFix = function(enable){
+    $('body').toggleClass('modal-safari-fix', enable)
+  }
 
   this.open = function(){
     
     _log("Opening");
 
-    $('body').addClass('modal-visible-animated');
+    $('body').addClass('modal-visible').addClass(animateForward);
+
+    setTimeout(function(){
+      safariFix(true);
+    }, 400);
   }
 
   this.close = function(){
-    $('body').removeClass('modal-visible-animated');
+    
+    $('body').removeClass(animateForward);
+    $('body').addClass('modal-visible-animated-out');
+    delayedClassRemove();
+    safariFix(false);
+  }
+
+  this.toggle = function(){
+    if(isOpen())
+      this.close();
+    else
+      this.open();
   }
 
   this.attachEvents = function(selector){
@@ -25,22 +61,14 @@ const ModalWindow = function(opts){
 
     if(!selector) selector = '.action-modal-window';
 
-    $(document).on('click touch', selector, function(){
+    $(document).on('click touchstart', selector, function(){
 
       _log("'action-modal-window' event fired!");
       
-      $('body').toggleClass('modal-visible-animated');
+      obj.toggle();
     })
   }
 
-
-
-  // this._getEl(){
-  //   if(his.opts.id)
-  //     document.getElementById(his.opts.id)
-  //   else
-  //     document.getElementsByClassName('modal-main')
-  // }
   _log("Loaded");
 
   return this;
