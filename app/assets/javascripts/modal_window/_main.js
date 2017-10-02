@@ -41,7 +41,6 @@ const ModalWindow = function(opts){
   }
 
   this.close = function(){
-    
     $('body').removeClass(animateForward);
     $('body').addClass('modal-visible-animated-out');
     delayedClassRemove();
@@ -57,13 +56,13 @@ const ModalWindow = function(opts){
 
   this.attachEvents = function(selector){
 
-    _log("Attaching events");
-
     if(!selector) selector = '.action-modal-window';
+
+    _log("Attaching events to '"+selector+"'");
 
     $(document).on('click touchstart', selector, function(){
 
-      _log("'action-modal-window' event fired!");
+      _log("'"+selector+"' event fired!");
       
       obj.toggle();
     })

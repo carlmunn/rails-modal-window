@@ -1,4 +1,4 @@
-$animation-time: 400ms;
+$animation-time: 250ms;
 $max-fit: 90%;
 
 @keyframes background-elements {
@@ -44,6 +44,7 @@ body.modal-visible-animated-in {
   @include stretched(fixed);
   
   display: none;
+  z-index: 1000;
   justify-content: center;
   align-items: center;
 
@@ -83,13 +84,13 @@ body.modal-visible-animated-in {
   }
 }
 
+// Fix for mobile Safari (Use Moderizr's test to apply 'touch')
+html.touch body.modal-visible.modal-safari-fix {
+  top: -10px;
+  position: fixed;
+}
+
 body.modal-visible {
-
-  &.modal-safari-fix {
-    top: -10px;
-    position: fixed;
-  }
-
   .modal-main {
     display: flex;
     transition: opacity $animation-time;

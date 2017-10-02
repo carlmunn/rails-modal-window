@@ -23,7 +23,7 @@ Sprocket's "require" for CSS and Javascript
 
 Add view helper as the last DOM child of `body`. `modal-shadow` is optional
 ```html
-<%= insert_modal_window %>
+<%= insert_modal_window do %>
   <div class='modal-shadow'>Content</div>
 <% end %>
 ```
