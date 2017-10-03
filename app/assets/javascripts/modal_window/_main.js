@@ -1,14 +1,13 @@
 const ModalWindow = function(opts){
 
-  // opts.namespace
-  // opts.template
+  // opts.namespace [CSS selector]
+  // opts.template [CSS selector| function]
 
   this.opts = opts;
 
   const animateForward = 'modal-visible-animated-in';  
   const obj            = this;
   var   modalSelector  = '.modal-main'
-  var   promise        = nil //new Promise;
 
   // Specific modal window
   if(opts.namespace) modalSelector = modalSelector+'.'+opts.namespace;
@@ -44,13 +43,22 @@ const ModalWindow = function(opts){
     }, 300);
   }
 
+  parseTemplate = function(hsh, str){
+
+    for (var _key in hsh) {
+      _log("checking for key '"+_key+"' value '"+hsh[_key]+"'")
+      str = str.replace("{{"+_key+"}}", hsh[_key])
+    }
+
+    return str
+  }
   // +template+ can be a DOM to a function
   //
   // DOM it will call .html() to get the contents to fill
   //
   // Function it will call and use the returned contents
   // if false it doesn't fill so one can do their own.
-  const _renderTemplate = function(){
+  const _renderTemplate = function(options){
 
     if(!opts.template) return;
 
@@ -58,10 +66,12 @@ const ModalWindow = function(opts){
 
     if(typeof(opts.template)=='function') {
       _log('function template, calling it');
-      str = opts.template();
+      str = opts.template(obj);
     } else {
-      _log("Rendering template: '"+opts.template+"'");
-      str = $(opts.template).html();
+      _log("Rendering template: '"+opts.template+"'")
+      
+      str = $(opts.template).html()
+      str = parseTemplate(options, str)
     }
     
     if(str!=false) $(_genSel('.modal-item')).html(str);
@@ -78,32 +88,48 @@ const ModalWindow = function(opts){
     $('body').toggleClass('modal-safari-fix', enable)
   }
 
-  this.generateSelector = function(selector){
-    return _genSel(selector);
+  // Called on #close; #open returns the Promise
+  var _promiseResolve = function(options){
+    return options
   }
 
-  this.open = function(){
-    
+  this.open = function(options){
+
     _log("Opening");
 
-    _renderTemplate();
+    _renderTemplate(options);
 
     _openModal();
 
     $('body').addClass('modal-visible').addClass(animateForward);
 
-    setTimeout(function(){
-      safariFix(true);
-    }, 400);
+    setTimeout(function(){ safariFix(true); }, 400);
+
+    const _promise = new Promise(function(resolve, reject){
+      _promiseResolve = resolve
+    });
+
+    return _promise;
   }
 
-  this.close = function(){
+  this.close = function(options){
+
+    _log("Closing")
+
     $('body').removeClass(animateForward);
     $('body').addClass('modal-visible-animated-out');
+
     delayedClassRemove();
+
     safariFix(false);
 
-    return promise.resolve()
+    _promiseResolve(options)
+
+    return obj;
+  }
+
+  this.generateSelector = function(selector){
+    return _genSel(selector);
   }
 
   this.toggle = function(){
