@@ -91,7 +91,7 @@ html.touch body.modal-visible.modal-safari-fix {
 }
 
 body.modal-visible {
-  .modal-main {
+  .modal-main.selected {
     display: flex;
     transition: opacity $animation-time;
   }
