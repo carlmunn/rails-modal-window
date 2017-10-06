@@ -1,8 +1,8 @@
+// opts.namespace [CSS selector]
+// opts.template [CSS selector| function]
 const ModalWindow = function(opts){
 
-  // opts.namespace [CSS selector]
-  // opts.template [CSS selector| function]
-
+  if(!opts) opts = {}
   this.opts = opts;
 
   const animateForward = 'modal-visible-animated-in';  
