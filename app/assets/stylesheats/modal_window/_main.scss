@@ -47,6 +47,7 @@ body.modal-visible-animated-in {
   z-index: 1000;
   justify-content: center;
   align-items: center;
+  will-change: transform, opacity;
 
   .modal-full-window {
 
@@ -63,6 +64,7 @@ body.modal-visible-animated-in {
       position: relative;
       z-index: 100;
       max-height: 100%;
+      will-change: transform, opacity;
       
       &:empty:before {
         content: "No Content"
@@ -79,7 +81,8 @@ body.modal-visible-animated-in {
   > .modal-background {
 
     @include stretched;
-
+    
+    will-change: transform, opacity;
     background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0.75) 75%,rgba(0,0,0,0.9) 100%);
   }
 }
