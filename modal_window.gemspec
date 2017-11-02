@@ -16,7 +16,14 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 5.0"
+  s.add_dependency "rails", "~> 5"
+  s.add_dependency "sass-rails", "~> 5"
 
-  #s.add_development_dependency "sqlite3"
+  # jQuery is a dependency but because it can be included in different
+  # ways having it explicitly as a gem requirement could break things
+  s.add_development_dependency 'jquery-rails'
+  
+  # Needed for the dummy Rails app
+  s.add_development_dependency "sqlite3"
+
 end
