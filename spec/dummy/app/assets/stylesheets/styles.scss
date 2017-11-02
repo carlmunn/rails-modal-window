@@ -1,0 +1,23 @@
+body {
+  font-family: Arial;
+}
+
+#btn-open-example-1 {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: silver;
+  cursor: pointer;
+}
+
+.placeholder {
+  padding: 5px;
+  background-color: #EEE;
+  margin: 5px;
+}
+
+// Modal custom styles
+
+.modal-item .custom-item {
+  background-color: pink;
+  max-width: 350px;
+}

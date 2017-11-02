@@ -30,7 +30,7 @@ Add view helper as the last DOM child of `body`. `modal-shadow` is optional
 
 Javascript
 ```javascript
-const modal = new ModalWindow;
+const modal = new ModalWindow({namespace: 'optional', template: 'optional'});
 
  // For manual open
 modal.open();
@@ -38,3 +38,7 @@ modal.open();
 // Uses '.action-modal-window' to open and close, so add it to a button
 modal.attachEvents(); 
 ```
+
+## Debugging
+window.debugModalWindow = true
+window.logModalWindow = true

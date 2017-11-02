@@ -1,5 +1,5 @@
 // opts.namespace [CSS selector]
-// opts.template [CSS selector| function]
+// opts.template  [CSS selector| function]
 const ModalWindow = function(opts){
 
   if(!opts) opts = {}
@@ -12,8 +12,14 @@ const ModalWindow = function(opts){
   // Specific modal window
   if(opts.namespace) modalSelector = modalSelector+'.'+opts.namespace;
 
-  const _log = function(msg) {
-    if(console) console.log('[L][ModalWindow]', msg);
+  const _log = function() {
+    if(console && window.logModalWindow)
+      console.log('[L][ModalWindow]', ...arguments);
+  }
+
+  const _debug = function() {
+    if(console && window.debugModalWindow)
+      console.log('[D][ModalWindow]', ...arguments);
   }
 
   // Selector generator that scopes to the namespace
@@ -46,7 +52,7 @@ const ModalWindow = function(opts){
   parseTemplate = function(hsh, str){
 
     for (var _key in hsh) {
-      _log("checking for key '"+_key+"' value '"+hsh[_key]+"'")
+      _debug("checking for key '"+_key+"' value '"+hsh[_key]+"'")
       str = str.replace("{{"+_key+"}}", hsh[_key])
     }
 
@@ -65,10 +71,10 @@ const ModalWindow = function(opts){
     var str = "";
 
     if(typeof(opts.template)=='function') {
-      _log('function template, calling it');
+      _debug('function template, calling it');
       str = opts.template(obj);
     } else {
-      _log("Rendering template: '"+opts.template+"'")
+      _debug("Rendering template: '"+opts.template+"'")
       
       str = $(opts.template).html()
       str = parseTemplate(options, str)
@@ -78,7 +84,7 @@ const ModalWindow = function(opts){
   }
 
   const _openModal = function(){
-    _log("Opening modal: '"+modalSelector+"'");
+    _debug("Opening modal: '"+modalSelector+"'");
     $('.modal-main').removeClass('selected')
     $(_genSel()).addClass('selected');
   }
@@ -94,8 +100,6 @@ const ModalWindow = function(opts){
   }
 
   this.open = function(options){
-
-    _log("Opening");
 
     _renderTemplate(options);
 
@@ -114,7 +118,7 @@ const ModalWindow = function(opts){
 
   this.close = function(options){
 
-    _log("Closing")
+    _debug("Closing")
 
     $('body').removeClass(animateForward);
     $('body').addClass('modal-visible-animated-out');
@@ -139,21 +143,33 @@ const ModalWindow = function(opts){
       this.open();
   }
 
-  this.attachEvents = function(selector){
+  // Just a helper, you can use the open/close ya self
+  //
+  // With no classSelector it will attach to close by 
+  // touching/clicking the out side background area
+  this.attachEvents = function(classSelector){
+    
+    if(!classSelector) {
+      classSelector = 'modal-full-window'
+      var cssSelector = _genSel("."+classSelector)
+    } else {
+      var cssSelector = "."+classSelector
+    }
 
-    if(!selector) selector = _genSel('.action-modal-window');
+    _debug("Attaching events (click touchstart) to '"+cssSelector+"'")
 
-    _log("Attaching events to '"+selector+"'");
+    $(document).on('click touchstart', cssSelector, function(event){
+      const el = $(event.target)
 
-    $(document).on('click touchstart', selector, function(){
-
-      _log("'"+selector+"' event fired!");
-      
-      obj.toggle();
+      if(el.hasClass(classSelector)) {
+        event.preventDefault();
+        _debug("'"+cssSelector+"' event fired! event target: ", event)
+        obj.toggle()
+      }
     })
   }
 
-  _log("Loaded: '"+modalSelector+"'");
+  _debug("Loaded: '"+modalSelector+"'")
 
   return this;
 }

@@ -1,1 +1,14 @@
 <h1>Modal Window Example</h1>
+
+<div id='btn-open-example-1' class='btn'>Open</div>
+
+<%= insert_modal_window(namespace: 'example-1') do %>
+  <div class='custom-item modal-shadow'>
+    <% 10.times do %>
+    <div class='placeholder'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      Odio aliquid, ipsam accusantium id veniam, nam corporis delectus explicabo
+      repellat similique consequatur assumenda numquam, cupiditate ea at alias
+      quam deleniti tempora!</div>
+    <% end %>
+  </div>
+<% end %>
