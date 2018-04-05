@@ -4,22 +4,24 @@ const ModalWindow = function(opts){
 
   if(!opts) opts = {}
   this.opts = opts;
+  
+  const animateForward  = 'modal-visible-animated-in';
+  const animateBackward = 'modal-visible-animated-out';
 
-  const animateForward = 'modal-visible-animated-in';  
   const obj            = this;
   var   modalSelector  = '.modal-main'
 
   // Specific modal window
   if(opts.namespace) modalSelector = modalSelector+'.'+opts.namespace;
 
-  const _log = function() {
+  const _log = function(msg) {
     if(console && window.logModalWindow)
-      console.log('[L][ModalWindow]', ...arguments);
+      console.log('[L][ModalWindow]', msg);
   }
 
-  const _debug = function() {
+  const _debug = function(msg) {
     if(console && window.debugModalWindow)
-      console.log('[D][ModalWindow]', ...arguments);
+      console.log('[D][ModalWindow]', msg);
   }
 
   // Selector generator that scopes to the namespace
@@ -38,14 +40,14 @@ const ModalWindow = function(opts){
   }
 
   const isOpen = function(){
-    return $('body').hasClass(animateForward);
+    return $('body').hasClass('modal-visible');
   }
 
   const delayedClassRemove = function(){
     setTimeout(function(){
       $('body')
         .removeClass('modal-visible')
-        .removeClass('modal-visible-animated-out');
+        .removeClass(animateBackward);
     }, 300);
   }
 
@@ -121,7 +123,7 @@ const ModalWindow = function(opts){
     _debug("Closing")
 
     $('body').removeClass(animateForward);
-    $('body').addClass('modal-visible-animated-out');
+    $('body').addClass(animateBackward);
 
     delayedClassRemove();
 
